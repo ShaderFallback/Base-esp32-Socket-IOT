@@ -3,12 +3,11 @@
 ### Development Environment
 - **Thonny** 
 - **Python3** 
-- **Xamarin** 
-- **Net.Core** 
 
 ### Hardware
 - **Esp32**
+- **Relay**
 
 ### Image
 
-![image](https://github.com/ShaderFallback/base-esp32-Socket-IOT/blob/main/Image/iot.jpg)
+![image](https://github.com/ShaderFallback/base-esp32-Socket-IOT/blob/main/Image/iot.png)
