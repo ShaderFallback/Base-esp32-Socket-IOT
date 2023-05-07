@@ -1,4 +1,4 @@
-# Base Esp32 Socket IOT Simple example
+# Base Esp32 IOT Simple example
 
 ### Development Environment
 - **Thonny** 
