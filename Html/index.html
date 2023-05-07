@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head> 
+<meta charset="utf-8"> 
+<title>AccessControlSystem</title> 
+</head>
+
+<style type="text/css">
+        .parent_box{
+			text-align: center;
+            width: auto;
+            height: auto;
+			margin: auto;
+        }
+
+        .child_box{
+            display: flex; 
+			justify-content: space-around;
+			width: auto;
+			height: auto;
+			background: #aaa;
+			margin: auto;
+		}
+
+</style>
+
+    <body bgcolor=#aaa> 
+        <script>			
+
+            var g_addr = 'ws://youServerDomain.com:9001/';
+				
+            function switchPic() {
+                //element.src="pic_bulboff.png";
+                element.src="pic_hello"+ Math.floor((Math.random()*4)+1) +".png";
+            }
+			
+			function switchText() {
+				var g_text = document.getElementById("p2");
+                g_text.innerHTML = "WelcomeHome~ !";
+            }
+			
+            function myrefresh() {
+                element = document.getElementById('myimage');
+                if (element.src.match("bulbon"))
+                {
+                    element.src="pic_bulboff.png";
+                }
+                else
+                {
+                    element.src="pic_bulbon.png";
+					socket = new WebSocket(g_addr);
+					socket.addEventListener('open', function (event) {contactServer();});
+					var g_text = document.getElementById("p2");
+					g_text.innerHTML = "OpenDoor...";
+					setTimeout(switchPic, 400);
+					setTimeout(switchText, 400);
+                }
+            }
+			contactServer = () =>
+			{
+                socket.send("UnlockDoor");
+            }
+			
+        </script>
+    
+</script>
+		<div class="parent_box">
+				<p style="font-size:100px">AccessControl</p>
+				<p id="p2" style="font-size:60px">"Push to unlock"</p>
+				<img loading="lazy" id="myimage" onclick="myrefresh()" src="pic_bulboff.png" width="500" height="500">
+				<p style="font-size:60px">AccessControlSystem</p>
+		</div>
+
+    </body >
+</html>

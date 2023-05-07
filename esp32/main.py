@@ -1,3 +1,7 @@
+#-------------------------------------------------------------
+# Please flash the MicroPython firmware first
+#-------------------------------------------------------------
+
 from machine import Pin, I2C
 import time
 import socket
@@ -12,12 +16,12 @@ addressIp = ""
 
 def getTime():
     t = time.gmtime()
-    timeY = str(t[0]) #年
-    timeM = str(t[1]) #月
-    timeD = str(t[2]) #日
-    timeHour = str(t[3]) #时
-    timeMinute = str(t[4]) #分
-    timeSecond = str(t[5]) #秒
+    timeY = str(t[0]) #year
+    timeM = str(t[1]) #month
+    timeD = str(t[2]) #day
+    timeHour = str(t[3]) #hour
+    timeMinute = str(t[4]) #minute
+    timeSecond = str(t[5]) #seconds
     return str(timeY+"/"+timeM+"/"+timeD +" "+timeHour+":"+timeMinute+":"+timeSecond)
 
 def do_connect():
@@ -25,56 +29,55 @@ def do_connect():
     try:
         import network
         wlan = network.WLAN(network.STA_IF)
-        wlan.active(False) #先将Wifi断开,方便模拟断网调试
+        wlan.active(False)
         wlan.active(True)
         if not wlan.isconnected():
             print('connecting to network...')
-            wlan.connect('你的wifi名', '你的wifi密码')
-            while not wlan.isconnected():#没有返回True将循环等待
+            wlan.connect('you wifi Name', 'you wifi password')
+            while not wlan.isconnected():
                 pass
         print('network config:', wlan.ifconfig())
         addressIp = str(wlan.ifconfig())
     except:
         pass
     
-do_connect()#连接Wifi
+do_connect()#Connect Wifi
 port = 5001
-#host = "127.0.0.1"
 
 addressIp = addressIp.replace("(","")
 addressIp = addressIp.replace(")","")
 addressIp = addressIp.replace("'","")
 addressIp = addressIp.split(",")
 
-print("IP: "+addressIp[0]+ " 端口: "+ str(port))
+print("IP: "+addressIp[0]+ " Port: "+ str(port))
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 s.bind((addressIp[0], port))
 s.listen(100)
 
 def fbiOpenDoor():
-    p22.value(0) #打开板载的小灯
+    p22.value(0) #On Led
     p19.value(1)
     time.sleep(1)
     p19.value(0)
-    p22.value(1) #点亮1秒后关闭
+    p22.value(1) #Off Led
 
 while(True):
     try:
-        print(getTime() + " 开始监听...")
+        print(getTime() + " Listening...")
         clientsocket, addr = s.accept()
         data = clientsocket.recv(1024)
         stringKey = data.decode("utf-8")
-        print(getTime()+" 接收信息..."+ stringKey)
-        if stringKey == "解锁大门":
+        print(getTime()+" Received messages..."+ stringKey)
+        if stringKey == "UnlockDoor":
             _thread.start_new_thread(fbiOpenDoor,())
-            msg = "开门成功"
+            msg = "Successes!"
             clientsocket.send(msg.encode("utf-8"))
-            print(getTime()+" 返回信息..."+ msg)
+            print(getTime()+" messages..."+ msg)
         clientsocket.close()
         time.sleep(0.1)
     except:
-        print(getTime()+" 连接断开...")
+        print(getTime()+" Disconnect...")
         clientsocket.close()
         time.sleep(0.1)
 
