@@ -11,4 +11,3 @@
 
 ### WebControl -> Server -> Esp32
 
-![image](https://github.com/ShaderFallback/base-esp32-Socket-IOT/blob/main/Image/iot.png)
